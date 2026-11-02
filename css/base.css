@@ -1,0 +1,59 @@
+/* css/base.css — variables, fonts, canvas, slides, origin marks */
+:root{--bg:#0A0C10;--bg2:#14181F;--text:#E9EEF5;--shared:#7FB2E5;--indiv:#E3A857;--muted:#8893A3;--line:#2A313C;--scale:1}
+
+/* Fonts: put files into fonts/. If missing -> Georgia / Segoe UI fallback */
+@font-face{font-family:"Cormorant Garamond";font-weight:500;font-style:normal;font-display:swap;src:url("../fonts/CormorantGaramond-Medium.woff2") format("woff2"),url("../fonts/CormorantGaramond-Medium.ttf") format("truetype")}
+@font-face{font-family:"Cormorant Garamond";font-weight:600;font-style:normal;font-display:swap;src:url("../fonts/CormorantGaramond-SemiBold.woff2") format("woff2"),url("../fonts/CormorantGaramond-SemiBold.ttf") format("truetype")}
+@font-face{font-family:"Cormorant Garamond";font-weight:500;font-style:italic;font-display:swap;src:url("../fonts/CormorantGaramond-MediumItalic.woff2") format("woff2"),url("../fonts/CormorantGaramond-MediumItalic.ttf") format("truetype")}
+@font-face{font-family:"IBM Plex Sans";font-weight:400;font-style:normal;font-display:swap;src:url("../fonts/IBMPlexSans-Regular.woff2") format("woff2"),url("../fonts/IBMPlexSans-Regular.ttf") format("truetype")}
+@font-face{font-family:"IBM Plex Sans";font-weight:500;font-style:normal;font-display:swap;src:url("../fonts/IBMPlexSans-Medium.woff2") format("woff2"),url("../fonts/IBMPlexSans-Medium.ttf") format("truetype")}
+
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:"IBM Plex Sans","Segoe UI",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+body.nocursor{cursor:none}
+#canvas{position:absolute;left:50%;top:50%;width:1920px;height:1080px;overflow:hidden;background:var(--bg);transform:translate(-50%,-50%) scale(var(--scale))}
+#counter{position:absolute;right:96px;bottom:40px;z-index:50;font-size:18px;line-height:1;letter-spacing:.08em;color:var(--muted)}
+#debug{position:fixed;left:8px;top:8px;z-index:99;padding:4px 8px;font:12px/1.3 Consolas,monospace;color:#9f9;background:rgba(0,0,0,.65)}
+
+/* Slides: fade 450 ms; .cut / .inst switch transitions off */
+.slide{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .45s ease-in-out,visibility 0s linear .45s}
+.slide.on{opacity:1;visibility:visible;transition:opacity .45s ease-in-out,visibility 0s}
+.slide.src{z-index:40;background:var(--bg)}
+.slide.cut,.slide.cut *,.slide.inst *{transition:none!important}
+.layer{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:visible}
+
+/* Anchor (0x0 flex box at x,y): child is centred, its transform stays free for animation */
+.pt{position:absolute;width:0;height:0;display:flex;align-items:center;justify-content:center}
+.t{flex:none;white-space:nowrap;text-align:center;line-height:1}
+.fx{opacity:0;transform:translate(var(--dx,0),var(--dy,0));transition:opacity .7s ease-in-out,transform .7s ease-in-out}
+.fx.v{opacity:var(--o,1);transform:none}
+.fx.v.dim{opacity:.2}
+.fx.v.hi{opacity:.6}
+
+.serif{font-family:"Cormorant Garamond",Georgia,"Times New Roman",serif;font-weight:500}
+.sans{font-family:"IBM Plex Sans","Segoe UI",Arial,sans-serif;font-weight:400}
+.it{font-style:italic}
+.c-text{color:var(--text)}.c-shared{color:var(--shared)}.c-indiv{color:var(--indiv)}.c-muted{color:var(--muted)}
+
+.hero{letter-spacing:.08em;padding-left:.08em}
+.fx.open-in{letter-spacing:.24em;padding-left:.24em;transition:opacity 1.2s ease-in-out,letter-spacing 1.2s ease-in-out,padding-left 1.2s ease-in-out}
+.fx.open-in.v{letter-spacing:.08em;padding-left:.08em}
+.dot{border-radius:50%;background:var(--shared)}
+.halo{--o:.35;border-radius:50%;background:radial-gradient(closest-side,rgba(127,178,229,.6),rgba(127,178,229,0));transition:opacity .8s ease-in-out,transform 1.2s ease-in-out}
+.draw{fill:none;stroke:var(--indiv);stroke-width:1.5;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .9s ease-in-out}
+.draw.v{stroke-dashoffset:0}
+
+/* Origin marks, bottom-left (x=96), stacked upward with a 30 px step */
+.marks{position:absolute;left:96px;bottom:44px;width:0;height:0}
+.mark{position:absolute;left:0;bottom:0;display:flex;align-items:center;gap:14px;white-space:nowrap;font-weight:500;font-size:18px;line-height:1;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);opacity:0;transition:opacity .6s ease-in-out,transform .6s ease-in-out}
+.mark.v{opacity:1}
+.mark i{flex:none;width:10px;height:10px;border-radius:50%}
+.k-p i{background:var(--shared)}
+.k-h i{border:2px solid var(--shared)}
+.k-r i{border:2px dashed var(--shared)}
+.k-a i{background:var(--indiv)}
+
+@media (prefers-reduced-motion:reduce){
+  .slide,.slide *{transition-duration:.15s!important;transition-delay:0s!important;animation:none!important}
+  .fx{--dx:0px!important;--dy:0px!important}
+}
